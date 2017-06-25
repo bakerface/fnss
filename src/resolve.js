@@ -23,37 +23,25 @@
 
 'use strict';
 
-import React from 'react';
-import PropTypes from 'prop-types';
-import resolve from './resolve';
-import withStyleSheet from './with-stylesheet';
-
-export default function wrap(C) {
-  const name = C.displayName || C.name || 'Component';
-
-  class StyleSheetWrapper extends React.Component {
-    render() {
-      const { stylesheet, style, ...props } = this.props;
-      const styles = resolve(stylesheet)(style);
-
-      return (
-        <C style={styles} {...props}/>
-      );
+export default function resolve(stylesheet) {
+  return function recurse(style) {
+    function reducer(target, key) {
+      target[key] = recurse(style[key]);
+      return target;
     }
-  }
 
-  StyleSheetWrapper.displayName = `StyleSheetWrapper(${name})`;
+    if (typeof style === 'function') {
+      return recurse(style(stylesheet));
+    }
 
-  StyleSheetWrapper.propTypes = {
-    children: PropTypes.node,
-    style: PropTypes.any,
-    stylesheet: PropTypes.object.isRequired
+    if (Array.isArray(style)) {
+      return [].concat(...style.map(recurse));
+    }
+
+    if (typeof style === 'object') {
+      return Object.keys(style).reduce(reducer, { });
+    }
+
+    return style;
   };
-
-  StyleSheetWrapper.defaultProps = {
-    children: null,
-    style: []
-  };
-
-  return withStyleSheet(StyleSheetWrapper);
 }
