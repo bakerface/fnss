@@ -1,0 +1,82 @@
+{
+  "name": "fnss",
+  "version": "1.0.0",
+  "description": "Extensible functional stylesheets for React and React-Native",
+  "main": "index.js",
+  "author": "Chris Baker <mail.chris.baker@gmail.com>",
+  "license": "MIT",
+  "homepage": "https://github.com/bakerface/fnss#readme",
+  "keywords": [
+    "extensible",
+    "functional",
+    "style",
+    "stylesheet",
+    "react",
+    "native"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bakerface/fnss.git"
+  },
+  "bugs": {
+    "url": "https://github.com/bakerface/fnss/issues"
+  },
+  "scripts": {
+    "build": "cross-env NODE_ENV=production rollup -c",
+    "test": "xo"
+  },
+  "xo": {
+    "extends": "xo-react",
+    "esnext": true,
+    "space": true,
+    "env": [
+      "browser"
+    ],
+    "ignores": [
+      "index.js"
+    ],
+    "rules": {
+      "array-bracket-spacing": [
+        "error",
+        "always"
+      ],
+      "no-unused-vars": [
+        "error",
+        {
+          "ignoreRestSiblings": true,
+          "varsIgnorePattern": "^_"
+        }
+      ],
+      "object-curly-spacing": [
+        "error",
+        "always"
+      ],
+      "react/forbid-component-props": [
+        "off"
+      ]
+    }
+  },
+  "peerDependencies": {
+    "react": "*"
+  },
+  "dependencies": {
+    "prop-types": "^15.5.10"
+  },
+  "devDependencies": {
+    "babel-preset-es2015-rollup": "^3.0.0",
+    "babel-preset-react": "^6.24.1",
+    "babel-preset-stage-3": "^6.24.1",
+    "cross-env": "^5.0.1",
+    "eslint": "^4.0.0",
+    "eslint-config-xo-react": "^0.12.0",
+    "eslint-plugin-react": "^7.1.0",
+    "react": "^15.6.1",
+    "rollup": "^0.43.0",
+    "rollup-plugin-babel": "^2.7.1",
+    "rollup-plugin-commonjs": "^8.0.2",
+    "rollup-plugin-node-resolve": "^3.0.0",
+    "rollup-plugin-replace": "^1.1.1",
+    "rollup-plugin-uglify": "^2.0.1",
+    "xo": "^0.18.2"
+  }
+}
