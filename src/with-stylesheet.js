@@ -33,11 +33,11 @@ export default function withStyleSheet(C) {
     constructor(props, context) {
       super(props, context);
 
-      this.state = {
-        stylesheet: context.stylesheet.props
-      };
-
       this.onStyleSheetUpdated = this.onStyleSheetUpdated.bind(this);
+
+      this.state = {
+        stylesheet: context.stylesheet.getState()
+      };
     }
 
     componentDidMount() {

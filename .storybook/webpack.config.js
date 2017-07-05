@@ -23,44 +23,18 @@
 
 'use strict';
 
-import React from 'react';
-import PropTypes from 'prop-types';
-import Context from './context';
+module.exports = {
+  module: {
 
-const sanitize = ({ children, ...props }) => props;
-
-export default class StyleSheetProvider extends React.PureComponent {
-  constructor(props) {
-    super(props);
-
-    this.stylesheet = new Context(sanitize(props));
+  },
+  resolve: {
+    alias: {
+      'react-native': 'react-native-web'
+    },
+    extensions: [
+      '.web.js',
+      '.js',
+      '.json'
+    ]
   }
-
-  componentWillReceiveProps(props) {
-    this.stylesheet.publish(sanitize(props));
-  }
-
-  getChildContext() {
-    return {
-      stylesheet: this.stylesheet
-    };
-  }
-
-  render() {
-    return this.props.children;
-  }
-}
-
-StyleSheetProvider.displayName = 'StyleSheetProvider';
-
-StyleSheetProvider.propTypes = {
-  children: PropTypes.node
-};
-
-StyleSheetProvider.defaultProps = {
-  children: null
-};
-
-StyleSheetProvider.childContextTypes = {
-  stylesheet: PropTypes.object.isRequired
 };

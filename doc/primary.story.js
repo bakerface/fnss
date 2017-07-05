@@ -24,43 +24,28 @@
 'use strict';
 
 import React from 'react';
-import PropTypes from 'prop-types';
-import Context from './context';
+import { Text } from 'react-native-web';
+import { storiesOf } from '@storybook/react';
+import * as StyleSheet from '../src';
 
-const sanitize = ({ children, ...props }) => props;
+const T = StyleSheet.wrap(Text);
+const primary = ({ primary = 'black' }) => primary;
 
-export default class StyleSheetProvider extends React.PureComponent {
-  constructor(props) {
-    super(props);
-
-    this.stylesheet = new Context(sanitize(props));
+const styles = StyleSheet.create({
+  primary: {
+    color: primary
   }
+});
 
-  componentWillReceiveProps(props) {
-    this.stylesheet.publish(sanitize(props));
-  }
-
-  getChildContext() {
-    return {
-      stylesheet: this.stylesheet
-    };
-  }
-
-  render() {
-    return this.props.children;
-  }
+function Example(props) {
+  return (
+    <StyleSheet.Provider {...props}>
+      <T style={styles.primary}>primary</T>
+    </StyleSheet.Provider>
+  );
 }
 
-StyleSheetProvider.displayName = 'StyleSheetProvider';
-
-StyleSheetProvider.propTypes = {
-  children: PropTypes.node
-};
-
-StyleSheetProvider.defaultProps = {
-  children: null
-};
-
-StyleSheetProvider.childContextTypes = {
-  stylesheet: PropTypes.object.isRequired
-};
+storiesOf('primary')
+  .add('default', () => <Example/>)
+  .add('red', () => <Example primary="red"/>)
+  .add('blue', () => <Example primary="blue"/>);

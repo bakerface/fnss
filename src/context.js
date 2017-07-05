@@ -23,58 +23,30 @@
 
 'use strict';
 
-function getPropsLessChildren({ children, ...props }) {
-  return props;
-}
-
-function isEqual(a, b) {
-  if (a === b) {
-    return true;
-  }
-
-  const keysA = Object.keys(a);
-  const keysB = Object.keys(b);
-  const count = keysA.length;
-
-  if (keysB.length !== count) {
-    return false;
-  }
-
-  for (let i = 0; i < count; i++) {
-    const key = keysA[i];
-
-    if (a[key] !== b[key]) {
-      return false;
-    }
-  }
-
-  return true;
-}
-
 export default class StyleSheetContext {
-  constructor(props) {
-    this.listeners = [];
-    this.props = getPropsLessChildren(props);
+  constructor(state) {
+    this._state = state;
+    this._listeners = [];
   }
 
-  publish(properties) {
-    const props = getPropsLessChildren(properties);
+  getState() {
+    return this._state;
+  }
 
-    if (!isEqual(this.props, props)) {
-      this.listeners.forEach(listener => listener(props));
-      this.props = props;
-    }
+  publish(state) {
+    this._listeners.forEach(listener => listener(state));
+    this._state = state;
   }
 
   subscribe(listener) {
-    this.listeners.push(listener);
+    this._listeners.push(listener);
 
     return {
-      remove: this.unsubscribe.bind(this, listener)
+      remove: () => this.unsubscribe(listener)
     };
   }
 
   unsubscribe(listener) {
-    this.listeners = this.listeners.filter(l => l !== listener);
+    this._listeners = this._listeners.filter(l => l !== listener);
   }
 }

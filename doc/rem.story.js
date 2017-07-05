@@ -24,43 +24,34 @@
 'use strict';
 
 import React from 'react';
-import PropTypes from 'prop-types';
-import Context from './context';
+import { Text, View } from 'react-native-web';
+import { storiesOf } from '@storybook/react';
+import * as StyleSheet from '../src';
 
-const sanitize = ({ children, ...props }) => props;
+const T = StyleSheet.wrap(Text);
+const rem = (n = 1) => ({ rem = 16 }) => n * rem;
 
-export default class StyleSheetProvider extends React.PureComponent {
-  constructor(props) {
-    super(props);
-
-    this.stylesheet = new Context(sanitize(props));
+const styles = StyleSheet.create({
+  title: {
+    fontSize: rem(2)
+  },
+  subtitle: {
+    fontSize: rem(1)
   }
+});
 
-  componentWillReceiveProps(props) {
-    this.stylesheet.publish(sanitize(props));
-  }
-
-  getChildContext() {
-    return {
-      stylesheet: this.stylesheet
-    };
-  }
-
-  render() {
-    return this.props.children;
-  }
+function Example(props) {
+  return (
+    <StyleSheet.Provider {...props}>
+      <View>
+        <T style={styles.title}>TITLE</T>
+        <T style={styles.subtitle}>subtitle</T>
+      </View>
+    </StyleSheet.Provider>
+  );
 }
 
-StyleSheetProvider.displayName = 'StyleSheetProvider';
-
-StyleSheetProvider.propTypes = {
-  children: PropTypes.node
-};
-
-StyleSheetProvider.defaultProps = {
-  children: null
-};
-
-StyleSheetProvider.childContextTypes = {
-  stylesheet: PropTypes.object.isRequired
-};
+storiesOf('rem')
+  .add('default', () => <Example/>)
+  .add('10px', () => <Example rem={10}/>)
+  .add('20px', () => <Example rem={20}/>);

@@ -23,44 +23,9 @@
 
 'use strict';
 
-import React from 'react';
-import PropTypes from 'prop-types';
-import Context from './context';
+import { configure } from '@storybook/react';
 
-const sanitize = ({ children, ...props }) => props;
+const context = require.context('../doc/', true, /\.story\.js$/);
+const load = () => context.keys().forEach(context);
 
-export default class StyleSheetProvider extends React.PureComponent {
-  constructor(props) {
-    super(props);
-
-    this.stylesheet = new Context(sanitize(props));
-  }
-
-  componentWillReceiveProps(props) {
-    this.stylesheet.publish(sanitize(props));
-  }
-
-  getChildContext() {
-    return {
-      stylesheet: this.stylesheet
-    };
-  }
-
-  render() {
-    return this.props.children;
-  }
-}
-
-StyleSheetProvider.displayName = 'StyleSheetProvider';
-
-StyleSheetProvider.propTypes = {
-  children: PropTypes.node
-};
-
-StyleSheetProvider.defaultProps = {
-  children: null
-};
-
-StyleSheetProvider.childContextTypes = {
-  stylesheet: PropTypes.object.isRequired
-};
+configure(load, module);
