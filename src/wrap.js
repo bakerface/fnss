@@ -31,15 +31,12 @@ import withStyleSheet from './with-stylesheet';
 export default function wrap(C) {
   const name = C.displayName || C.name || 'Component';
 
-  class StyleSheetWrapper extends React.Component {
-    render() {
-      const { stylesheet, style, ...props } = this.props;
-      const styles = resolve(stylesheet)(style);
+  function StyleSheetWrapper({ stylesheet, style, ...props }) {
+    const styles = resolve(stylesheet)(style);
 
-      return (
-        <C style={styles} {...props}/>
-      );
-    }
+    return (
+      <C style={styles} {...props}/>
+    );
   }
 
   StyleSheetWrapper.displayName = `StyleSheetWrapper(${name})`;

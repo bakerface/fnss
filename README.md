@@ -11,8 +11,8 @@ import * as StyleSheet from 'fnss';
 
 const StyleableText = StyleSheet.wrap(Text);
 
-const primary = ({ primary }) => primary;
-const rem = (n = 1) => ({ rem }) => n * rem;
+const primary = ({ primary = 'black' }) => primary;
+const rem = (n = 1) => ({ rem = 16 }) => n * rem;
 
 const styles = StyleSheet.create({
   text: {
@@ -24,9 +24,9 @@ const styles = StyleSheet.create({
 export default class App extends React.Component {
   render() {
     return (
-      <StyleSheet.Provider rem={16} primary="blue">
+      <StyleSheet.Provider rem={10} primary="blue">
         <StyleableText style={styles.text}>
-          Hello there
+          Hello world
         </StyleableText>
       </StyleSheet.Provider>
     );

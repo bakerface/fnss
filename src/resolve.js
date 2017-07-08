@@ -30,6 +30,10 @@ export default function resolve(stylesheet) {
       return target;
     }
 
+    if (!style) {
+      return style;
+    }
+
     if (typeof style === 'function') {
       return recurse(style(stylesheet));
     }

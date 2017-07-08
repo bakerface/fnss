@@ -29,7 +29,7 @@ import PropTypes from 'prop-types';
 export default function withStyleSheet(C) {
   const name = C.displayName || C.name || 'Component';
 
-  class StyleSheetSubscriber extends React.Component {
+  class StyleSheetSubscriber extends React.PureComponent {
     constructor(props, context) {
       super(props, context);
 
