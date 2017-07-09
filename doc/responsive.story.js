@@ -24,86 +24,62 @@
 'use strict';
 
 import React from 'react';
-import { Text, View } from 'react-native-web';
+import { Text } from 'react-native-web';
 import { storiesOf } from '@storybook/react';
 import * as StyleSheet from '../src';
+import LayoutProvider from './layout-provider';
 
-function withLayout(Component) {
-  return class LayoutProvider extends React.PureComponent {
-    constructor(props) {
-      super(props);
-
-      this.handleLayout = this.handleLayout.bind(this);
-      this.state = { };
-    }
-
-    handleLayout(e) {
-      this.setState({
-        layout: e.nativeEvent.layout
-      });
-    }
-
-    renderComponent() {
-      if (this.state.layout) {
-        return (
-          <Component layout={this.state.layout} {...this.props}/>
-        );
-      }
-
-      return null;
-    }
-
-    render() {
-      return (
-        <View onLayout={this.handleLayout}>
-          { this.renderComponent() }
-        </View>
-      );
-    }
-  };
-}
-
-const Provider = withLayout(StyleSheet.Provider);
 const T = StyleSheet.wrap(Text);
 
-const cond = (c, t, f) => c ? t : f;
+const width = ({ layout }) => layout.width;
+const rem = (n = 1) => ({ rem = 16 }) => n * rem;
+const medium = ({ medium = 30 }) => rem(medium);
+const large = ({ large = 60 }) => rem(large);
 
-const atleast = min => (t, f) => ({ layout }) =>
-  cond(layout.width >= min, t, f);
+const ns = style => stylesheet => {
+  const resolve = StyleSheet.resolve(stylesheet);
+  const w = resolve(width);
+  const m = resolve(medium);
 
-const between = (min, max) => (t, f) => ({ layout }) =>
-  cond(min <= layout.width && layout.width <= max, t, f);
+  return w >= m && style;
+};
 
-const xs = between(0, 575);
-const sm = between(576, 767);
-const md = between(768, 991);
-const lg = between(992, 1199);
-const xl = atleast(1200);
+const m = style => stylesheet => {
+  const resolve = StyleSheet.resolve(stylesheet);
+  const w = resolve(width);
+  const m = resolve(medium);
+  const l = resolve(large);
 
-const selected = { fontSize: 30 };
-const unselected = { fontSize: 10 };
+  return m <= w && w < l && style;
+};
+
+const l = style => stylesheet => {
+  const resolve = StyleSheet.resolve(stylesheet);
+  const w = resolve(width);
+  const l = resolve(large);
+
+  return w >= l && style;
+};
 
 const styles = StyleSheet.create({
-  xs: xs(selected, unselected),
-  sm: sm(selected, unselected),
-  md: md(selected, unselected),
-  lg: lg(selected, unselected),
-  xl: xl(selected, unselected)
+  text: [
+    { backgroundColor: 'yellow' },
+    ns({ fontSize: rem(2) }),
+    m({ fontStyle: 'italic' }),
+    l({ color: 'red' })
+  ]
 });
 
 function Example(props) {
   return (
-    <Provider {...props}>
-      <View>
-        <T style={styles.xs}>xs</T>
-        <T style={styles.sm}>sm</T>
-        <T style={styles.md}>md</T>
-        <T style={styles.lg}>lg</T>
-        <T style={styles.xl}>xl</T>
-      </View>
-    </Provider>
+    <LayoutProvider>
+      <StyleSheet.Provider {...props}>
+        <T style={styles.text}>hello world</T>
+      </StyleSheet.Provider>
+    </LayoutProvider>
   );
 }
 
 storiesOf('responsive')
-  .add('breakpoints', () => <Example/>);
+  .add('0, 30, 60', () => <Example/>)
+  .add('0, 10, 20', () => <Example medium={10} large={20}/>);

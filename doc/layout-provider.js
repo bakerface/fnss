@@ -23,7 +23,47 @@
 
 'use strict';
 
-export { default as Provider } from './provider';
-export { default as create } from './create';
-export { default as resolve } from './resolve';
-export { default as wrap } from './wrap';
+import React from 'react';
+import PropTypes from 'prop-types';
+import { View } from 'react-native-web';
+
+export default class LayoutProvider extends React.PureComponent {
+  constructor(props) {
+    super(props);
+
+    this.handleLayout = this.handleLayout.bind(this);
+    this.state = { };
+  }
+
+  handleLayout(e) {
+    this.setState({
+      layout: e.nativeEvent.layout
+    });
+  }
+
+  renderComponent() {
+    const { layout } = this.state;
+
+    if (layout) {
+      return React.cloneElement(this.props.children, { layout });
+    }
+
+    return null;
+  }
+
+  render() {
+    return (
+      <View onLayout={this.handleLayout}>
+        { this.renderComponent() }
+      </View>
+    );
+  }
+}
+
+LayoutProvider.propTypes = {
+  children: PropTypes.node
+};
+
+LayoutProvider.defaultProps = {
+  children: null
+};
