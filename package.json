@@ -1,6 +1,6 @@
 {
   "name": "fnss",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "Extensible functional stylesheets for React and React-Native",
   "main": "index.js",
   "author": "Chris Baker <mail.chris.baker@gmail.com>",
@@ -40,6 +40,9 @@
       "array-bracket-spacing": [
         "error",
         "always"
+      ],
+      "camelcase": [
+        "off"
       ],
       "no-unused-vars": [
         "error",
